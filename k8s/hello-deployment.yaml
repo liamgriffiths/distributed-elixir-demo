@@ -15,3 +15,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP

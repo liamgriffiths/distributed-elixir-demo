@@ -19,7 +19,7 @@ defmodule Hello.Mixfile do
   def application do
     [
       mod: {Hello.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :libcluster]
     ]
   end
 
@@ -38,7 +38,8 @@ defmodule Hello.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:distillery, "~> 1.5"}
+      {:distillery, "~> 1.5"},
+      {:libcluster, "~> 2.1"}
     ]
   end
 end

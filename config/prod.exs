@@ -24,6 +24,17 @@ config :hello, HelloWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :libcluster,
+  topologies: [
+    k8s: [
+      strategy: Cluster.Strategy.Kubernetes,
+      config: [
+        kubernetes_selector: "app=hello",
+        kubernetes_node_basename: "hello"
+      ]
+    ]
+  ]
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
