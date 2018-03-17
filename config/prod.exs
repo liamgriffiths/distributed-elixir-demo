@@ -24,18 +24,10 @@ config :hello, HelloWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
-config :libcluster,
-  topologies: [
-    k8s: [
-      strategy: Cluster.Strategy.Kubernetes,
-      config: [
-        mode: :ip,
-        kubernetes_selector: "app=hello",
-        kubernetes_node_basename: "hello",
-        polling_interval: 1_000
-      ]
-    ]
-  ]
+config :peerage, via: Peerage.Via.Dns,
+  dns_name: "hello-service-headless.default.svc.cluster.local",
+  app_name: "hello",
+  interval: 1
 
 # ## SSL Support
 #

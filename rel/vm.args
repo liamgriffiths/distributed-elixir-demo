@@ -1,2 +1,2 @@
--name hello@${POD_A_RECORD}.default.pod.cluster.local
+-name hello@${MY_POD_IP}
 -setcookie hellocookie

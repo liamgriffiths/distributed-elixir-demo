@@ -108,6 +108,22 @@ docker push localhost:5000/hello/<next-version>
 minikube apply -f k8s/hello-deployment.yaml
 ```
 
+Distributed Elixir
+```
+# each elixir node needs a name, this is setup using rel/vm.args create this
+# file and pass in a name that include the app + it's IP address in the k8s
+# (grep for vm.args)
+
+# nodes need a way to lookup other nodes - this is accomplished with another
+# k8s service - a "headless" service with no IP of it's own for the app
+# (see hello-headless-service.yaml)
+minikube apply -f k8s/hello-headless-service.yaml
+
+# install `peerage` package and set it up in the config/prod.ex file
+# (see example)
+
+```
+
 
 
 To start your Phoenix server:

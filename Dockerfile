@@ -116,4 +116,4 @@ COPY --from=0 /opt/release .
 
 # Start the server.
 EXPOSE ${PORT}
-# CMD ["/opt/app/bin/start_server", "foreground"]
+CMD ["/opt/app/bin/start_server", "foreground"]
