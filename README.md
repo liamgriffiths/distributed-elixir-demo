@@ -83,7 +83,12 @@ minikube service hello-service
 
 # check out the minikube dashboard
 minikube dashboard
+
+# peep the service using kubectl
+kubectl get service
 ```
+
+
 
 
 To start your Phoenix server:
