@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: hello
-          image: localhost:5000/hello/1
+          image: localhost:5000/hello/5
           ports:
             - containerPort: 8080
           env:

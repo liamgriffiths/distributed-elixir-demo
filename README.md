@@ -88,6 +88,25 @@ minikube dashboard
 kubectl get service
 ```
 
+Making changes and pushing them (steps)
+```
+# edit some code
+
+# re-build image
+docker build --no-cache -t hello .
+
+# re-tag our image
+docker tag hello:latest localhost:5000/hello/<next-version>
+
+# re-publish our image
+docker push localhost:5000/hello/<next-version>
+
+# update k8s deployment
+# (edit image field to use next image)
+
+# apply new deployment
+minikube apply -f k8s/hello-deployment.yaml
+```
 
 
 
