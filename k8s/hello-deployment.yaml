@@ -11,7 +11,10 @@ spec:
     spec:
       containers:
         - name: hello
-          image: localhost:5000/hello/5
+          image: localhost:5000/hello/10
+          command: ["sh", "-c"]
+          args: ["POD_A_RECORD"]
+          args: ["export POD_A_RECORD=$(echo $MY_POD_IP | sed 's/[^0-9]/-/g') && /opt/app/bin/start_server foreground"]
           ports:
             - containerPort: 8080
           env:

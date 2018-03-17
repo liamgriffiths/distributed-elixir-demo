@@ -29,8 +29,10 @@ config :libcluster,
     k8s: [
       strategy: Cluster.Strategy.Kubernetes,
       config: [
+        mode: :ip,
         kubernetes_selector: "app=hello",
-        kubernetes_node_basename: "hello"
+        kubernetes_node_basename: "hello",
+        polling_interval: 1_000
       ]
     ]
   ]
