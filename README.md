@@ -41,6 +41,50 @@ eval $(minikube docker-env)
 docker kill <pid>
 ```
 
+## Run k8s cluster in Minikube
+
+Setup a local image registry with Docker (See: https://github.com/googlefonts/fontbakery-dashboard/issues/3)
+```
+# 1. start minikube that knows about the local registry
+minikube start --insecure-registry localhost:5000
+
+# 2. hook into docker
+eval $(minikube docker-env)
+
+# 3. create local registry
+docker run -d -p 5000:5000 --restart=always --name registry   -v /data/docker-registry:/var/lib/registry registry:2
+```
+
+Publish image to local registry
+```
+# tag our image
+docker tag hello:latest localhost:5000/hello/1
+
+# publish our image
+docker push localhost:5000/hello/1
+```
+
+Run k8s cluster
+```
+# create config files in ./k8s/
+# (pod config) hello-deployment.yaml
+# (load balancer service) hello-service.yaml
+
+# create the deployment and service in minikube
+minikube create -f k8s/hello-deployment.yaml
+minikube create -f k8s/hello-service.yaml
+
+# (later) when updating the configs, apply the changes
+minikube apply -f k8s/hello-deployment.yaml
+minikube apply -f k8s/hello-service.yaml
+
+# open the service
+minikube service hello-service
+
+# check out the minikube dashboard
+minikube dashboard
+```
+
 
 To start your Phoenix server:
 
