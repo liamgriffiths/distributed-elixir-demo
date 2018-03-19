@@ -1,1 +1,95 @@
 /* This file is for your main application css. */
+body {
+  background: papayawhip;
+  padding: 0;
+  margin: 0;
+  font-family: "SF Mono", "Droid Sans Mono", "Source Code Pro", monospace;
+}
+
+input {
+  display: none;
+}
+
+.App {
+  position: relative;
+}
+
+.Info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  color: #fff;
+  background: #222;
+  opacity: 0.8;
+}
+
+.--cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1vw;
+  grid-auto-rows: minmax(100px, auto);
+
+  height: 50vw;
+  width: 50vw;
+
+  position: absolute;
+  left: 0;
+  top: 5vw;
+  right: 0;
+  margin: auto auto;
+
+}
+
+.Card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.Card .--sides {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: all 500ms;
+  z-index: 20;
+  /** figure out how to -not- display shadow at top when checked */
+  box-shadow: 1px 3px 3px rgba(20,20,20,.2);
+}
+
+.Card .--sides div {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  /* backface-visibility: hidden; */
+  border-radius: 2px;
+}
+
+.Card .--sides .--front {
+  transform: rotateX(180deg);
+}
+
+.Card .--sides .--back {
+  transform: rotateX(180deg);
+}
+
+.Card:hover .--sides,
+.Card:active .--sides,
+.Card:focus .--sides {
+  transform: rotateX(20deg);
+  box-shadow: 0 12px 12px rgba(20,20,20,.2);
+}
+
+:checked + .--sides {
+  transform: rotateX(180deg);
+}
+
+.Card:hover :checked + .--sides,
+.Card:active :checked + .--sides,
+.Card:focus :checked + .--sides {
+  transform: rotateX(160deg);
+}
+
+.Info {
+}
