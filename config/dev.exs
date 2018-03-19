@@ -14,6 +14,8 @@ config :hello, HelloWeb.Endpoint,
   watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
                     cd: Path.expand("../assets", __DIR__)]]
 
+config :peerage, via: Peerage.Via.Self
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
@@ -42,7 +44,7 @@ config :hello, HelloWeb.Endpoint,
   ]
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, level: :info
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

@@ -12,6 +12,7 @@ defmodule Hello.Application do
       supervisor(HelloWeb.Endpoint, []),
       # Start your own worker by calling: Hello.Worker.start_link(arg0, arg2, arg3)
       # worker(Hello.Worker, [arg1, arg2, arg3]),
+      worker(Hello.Cards, [Hello.Cards.initial()])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
