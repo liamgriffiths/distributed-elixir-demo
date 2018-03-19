@@ -58,10 +58,12 @@ docker run -d -p 5000:5000 --restart=always --name registry   -v /data/docker-re
 Publish image to local registry
 ```
 # tag our image
-docker tag hello:latest localhost:5000/hello/1
+(local) docker tag hello:latest localhost:5000/hello/1
+(public) docker tag hello:latest liamgriffiths/hello:12
 
 # publish our image
 docker push localhost:5000/hello/1
+docker push liamgriffiths/hello:12
 ```
 
 Run k8s cluster
@@ -105,7 +107,7 @@ docker push localhost:5000/hello/<next-version>
 # (edit image field to use next image)
 
 # apply new deployment
-minikube apply -f k8s/hello-deployment.yaml
+kubectl apply -f k8s/hello-deployment.yaml
 ```
 
 Distributed Elixir
@@ -117,7 +119,7 @@ Distributed Elixir
 # nodes need a way to lookup other nodes - this is accomplished with another
 # k8s service - a "headless" service with no IP of it's own for the app
 # (see hello-headless-service.yaml)
-minikube apply -f k8s/hello-headless-service.yaml
+kubectl apply -f k8s/hello-headless-service.yaml
 
 # install `peerage` package and set it up in the config/prod.ex file
 # (see example)

@@ -8,7 +8,14 @@ defmodule Hello.Cards do
   end
 
   def start_link(state) do
-    Agent.start_link(fn -> state end, name: __MODULE__)
+    case Agent.start_link(fn -> state end, name: {:global, __MODULE__})
+      {:ok, pid} ->
+        Logger.info "Started #{__MODULE__}"
+        {:ok, pid}
+      {:error, {:already_started, pid}} ->
+        Logger.info "Already started #{__MODULE__}"
+        {:ok, pid}
+    end
   end
 
   def get do
