@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: hello
-          image: liamgriffiths/hello:12
+          image: liamgriffiths/hello:14
           ports:
             - containerPort: 8080
           env:
