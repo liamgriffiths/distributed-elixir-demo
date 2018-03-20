@@ -25,7 +25,7 @@ config :hello, HelloWeb.Endpoint,
 config :logger, level: :info
 
 config :peerage, via: Peerage.Via.Dns,
-  dns_name: "hello-service-headless.default.svc.cluster.local",
+  dns_name: "headless-service.hello.svc.cluster.local",
   app_name: "hello",
   interval: 1
 
