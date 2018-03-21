@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# apply all the kubernetes configs for the hello app
+
+ls k8s/hello/** | xargs -L1 kubectl apply -f
