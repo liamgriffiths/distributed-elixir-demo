@@ -3,8 +3,7 @@ defmodule Hello.Cards do
   @size 5 * 5
 
   def initial do
-    s = Stream.repeatedly(fn -> "222222" end)
-    Enum.take(s, @size)
+    List.duplicate("222222", @size)
   end
 
   def start_link(state) do
@@ -22,7 +21,7 @@ defmodule Hello.Cards do
 
   def update(index, next) do
     Agent.update({:global, __MODULE__}, fn state ->
-      List.update_at(state, index, fn _ -> next end)
+      List.replace_at(state, index, next)
     end)
   end
 end
