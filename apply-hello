@@ -2,4 +2,7 @@
 
 # apply all the kubernetes configs for the hello app
 
-ls k8s/hello/** | xargs -L1 kubectl apply -f
+kubectl apply -f ./k8s/hello/namespace.yaml
+kubectl apply -f ./k8s/hello/deployment.yaml
+kubectl apply -f ./k8s/hello/service.yaml
+kubectl apply -f ./k8s/hello/headless-service.yaml
