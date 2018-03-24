@@ -1,8 +1,69 @@
-# Hello
+# Distributed Elixir Demo
+
+Hi, I made this little demo to give an example of how to setup a distributed elixir
+app that you can run on a local Kubernetes cluster.
+
+Some of the things in this demo:
+* Setting up a simple websocket-based Phoenix app
+* Creating releases with Distillery
+* Packaging a release inside a Docker container
+* Running containers inside a Kubernetes cluster in distributed mode
+
+## Download this stuff first
+
+I'm using OSX, so the installation instructions are based on this.
+
+```
+# Make sure you have elixir installed
+$ brew install elixir
+
+# Install Docker
+$ brew install docker
+# (or just download the installer from the website)
+
+# Install VirtualBox
+# (download the installer from the website)
+
+# Install Minikube (mini kubernetes that runs on VirtualBox)
+$ brew cask install minikube
+
+# Install kubectl (command line tool to interact with Kubernetes)
+$ brew install kubectl
+
+# Clone this repo
+$ git clone ...
+```
+
+## Running the Phoenix app on the OSX host
+
+Make sure the app works by running it on the OSX first.
+
+```
+# Install elixir app dependencies
+$ mix deps.get
+
+# Run the app
+$ mix phx.server
+
+# See that it works in the browser
+$ open http://localhost:4000
+```
+
+## Creating a Distillery release
+
+For this project I'm using [distillery]() to create an elixir release. A release in
+this sense is a single, deployable binary that contains all the compiled app code as
+well as the Erlang runtime required to run it.
+
+## Building a Distillery release in a Docker container
+
+## Running the container in Minikube
 
 
 
-## Setup
+
+
+
 
 * https://cloud.google.com/community/tutorials/elixir-phoenix-on-kubernetes-google-container-engine
 
