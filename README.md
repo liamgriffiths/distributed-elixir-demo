@@ -147,20 +147,37 @@ $ minikube service service --namespace=hello
 $ minikube delete
 ```
 
+### Seeing what is going on with the cluster
+
+... todo ...
+
 ## How this all works
 
 ### Phoenix websockets, channels, Elixir processes
 
-... tbd ...
+... todo ...
+
+* Card state, global processes (and why it might be a bad idea in prod :D)
+* Phoenix channels, PG2
 
 ### Distributed Elixir/Erlang
 
-... tbd ...
+... todo ...
+
+* Erlang cookie
+* Node names
+* Peerage
+* vm.args and build steps
 
 ### Kubernetes configuration
 
-... tbd ...
+... todo ...
 
+* About docker containers, tagging, versioning
+* About the "namespace" config
+* About the "deployment" config
+* About the "service" config
+* About the "headless-service" config
 
 ## Thanks
 
