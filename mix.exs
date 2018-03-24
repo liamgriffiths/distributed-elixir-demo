@@ -19,7 +19,7 @@ defmodule Hello.Mixfile do
   def application do
     [
       mod: {Hello.Application, []},
-      extra_applications: [:logger, :runtime_tools, :peerage, :wobserver]
+      extra_applications: [:logger, :runtime_tools, :peerage]
     ]
   end
 
@@ -39,8 +39,7 @@ defmodule Hello.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:distillery, "~> 1.5"},
-      {:peerage, "~> 1.0.2"},
-      {:wobserver, "~> 0.1"}
+      {:peerage, "~> 1.0.2"}
     ]
   end
 end
