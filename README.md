@@ -1,6 +1,6 @@
 # Distributed Elixir Demo
 
-Hi, I made this little demo to show an example of how to setup a distributed elixir
+Hi, I made this little demo to show an example of how to setup a distributed Elixir
 app that you can run on a local Kubernetes cluster.
 
 Some of the things in this demo:
@@ -16,8 +16,11 @@ Some of the things in this demo:
 I'm using OSX, so the installation instructions are based on this.
 
 ```
-# Make sure you have elixir installed
+# Make sure you have Elixir installed
 $ brew install elixir
+
+# Install node and npm (needed for Phoenix app)
+$ brew install node
 
 # Install Docker
 $ brew install docker
@@ -36,13 +39,14 @@ $ brew install kubectl
 $ git clone <this-repo>
 ```
 
-### Running the Phoenix app on the OSX host
+### Get the Phoenix app up and running
 
-Make sure the app works by running it on the OSX first.
+Make sure the app works by running it on your local host first.
 
 ```
-# Install elixir app dependencies
+# Install Elixir && JS app dependencies
 $ mix deps.get
+$ (cd assets && npm i)
 
 # Run the app
 $ mix phx.server
@@ -53,10 +57,11 @@ $ open http://localhost:4000
 
 ### Creating a Distillery release
 
-For this project I'm using [distillery]() to create an elixir release. A release in
-this sense is a single, deployable binary that contains all the compiled app code as
-well as the Erlang runtime required to run it. Distillery automates this process and
-gives us a simple command line tool to do it.
+For this project I'm using
+[distillery](https://github.com/bitwalker/distillery) to create an Elixir
+release. A release is a single, deployable binary that contains all the
+compiled app code as well as the Erlang runtime required to run it.  Distillery
+automates this process and gives us a simple command line tool to do it.
 
 ```
 # Create a release with distiller
@@ -69,18 +74,20 @@ $ _build/dev/rel/hello/bin/hello foreground
 $ open http://localhost:4000
 ```
 
-### Building a Distillery release in a Docker container
+### Creating a Distillery release in a Docker container
 
 If we want to deploy this release to a Linux machine, we'll need to make sure that we
 also _create_ our release in the same enviornment. This is because the release is
 built using various system dependencies that may be wildly different on OSX than your
 deployment target. We can use a Docker container to help us here. The trick here is
-to use the Docker container to describe a consistent environment that we will create
-our release in - which will be the same environment we eventually run our code in.
+to use the Docker container to describe a environment that we will create
+our release in which will be the same environment we eventually run our code in.
 
-I used this [Dockerfile]() that I got from Google to create a docker image that
-creates our distillery release and then uses that compiled code to expose an
-http port and run the app.
+I used this
+[Dockerfile](https://github.com/GoogleCloudPlatform/community/blob/master/tutorials/elixir-phoenix-on-kubernetes-google-container-engine/Dockerfile)
+that I got from Google to create a docker image that creates our distillery
+release and then uses that compiled code to expose an http port and run the
+app.
 
 ```
 # Create an image using the Dockerfile
@@ -99,13 +106,14 @@ $ docker kill <container-id>
 
 ### Running the container in Minikube
 
-Running a container one at a time is pretty cool, but our goal here is to run many
-containers with our app. This is where Kubernetes comes in. Using Minikube we can
-play around with a local Kubernetes cluster. In addition, to just running mulitple
-containerized instances of our app we would also like to let our app instances to
-be able to "talk" to each other and share resources. This example repo is configured
-to allow us to do this using a few tricks that I'll describe in detail later on. But
-for now, let's see what it looks like to run it.
+Running a container one at a time is pretty cool, but our goal here is to run
+many containers with our app. This is where Kubernetes comes in. Using
+[Minikube](https://github.com/kubernetes/minikube) we can play around with a
+local Kubernetes cluster. In addition, to just running mulitple containerized
+instances of our app we would also like to let our app instances to be able to
+"talk" to each other and share resources. This example repo is configured to
+allow us to do this using a few tricks that I'll describe in detail later on.
+But for now, let's see what it looks like to run it.
 
 ```
 # Start up Minikube (takes a minute or two)
@@ -156,7 +164,13 @@ $ minikube delete
 
 ## Thanks
 
-... tbd ...
+Big thanks to all the free projects out there that let me put this together:
+Elixir, Phoenix, React, Docker, Kubernetes, Distillery, Peerage, and all people
+who write about these things on the internet.
 
-Some blogs and tutorials that helped me out
+Some great blogs and tutorials that helped me out in particular:
+* https://medium.com/polyscribe/a-complete-guide-to-deploying-elixir-phoenix-applications-on-kubernetes-part-1-setting-up-d88b35b64dcd
 * https://cloud.google.com/community/tutorials/elixir-phoenix-on-kubernetes-google-container-engine
+* https://hackernoon.com/state-of-the-art-in-deploying-elixir-phoenix-applications-fe72a4563cd8
+* https://www.cogini.com/blog/best-practices-for-deploying-elixir-apps/
+* http://0length.com/posts/Erlang-Clustering-on-Kubernetes.html
