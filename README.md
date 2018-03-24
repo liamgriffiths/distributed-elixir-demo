@@ -1,6 +1,6 @@
 # Distributed Elixir Demo
 
-Hi, I made this little demo to give an example of how to setup a distributed elixir
+Hi, I made this little demo to show an example of how to setup a distributed elixir
 app that you can run on a local Kubernetes cluster.
 
 Some of the things in this demo:
@@ -9,7 +9,9 @@ Some of the things in this demo:
 * Packaging a release inside a Docker container
 * Running containers inside a Kubernetes cluster in distributed mode
 
-## Download this stuff first
+## How to run this thing
+
+### Download this stuff first
 
 I'm using OSX, so the installation instructions are based on this.
 
@@ -31,10 +33,10 @@ $ brew cask install minikube
 $ brew install kubectl
 
 # Clone this repo
-$ git clone ...
+$ git clone <this-repo>
 ```
 
-## Running the Phoenix app on the OSX host
+### Running the Phoenix app on the OSX host
 
 Make sure the app works by running it on the OSX first.
 
@@ -49,160 +51,112 @@ $ mix phx.server
 $ open http://localhost:4000
 ```
 
-## Creating a Distillery release
+### Creating a Distillery release
 
 For this project I'm using [distillery]() to create an elixir release. A release in
 this sense is a single, deployable binary that contains all the compiled app code as
-well as the Erlang runtime required to run it.
+well as the Erlang runtime required to run it. Distillery automates this process and
+gives us a simple command line tool to do it.
 
-## Building a Distillery release in a Docker container
+```
+# Create a release with distiller
+$ mix release
 
-## Running the container in Minikube
+# Run the release it produced
+$ _build/dev/rel/hello/bin/hello foreground
+
+# See that it works in the browser
+$ open http://localhost:4000
+```
+
+### Building a Distillery release in a Docker container
+
+If we want to deploy this release to a Linux machine, we'll need to make sure that we
+also _create_ our release in the same enviornment. This is because the release is
+built using various system dependencies that may be wildly different on OSX than your
+deployment target. We can use a Docker container to help us here. The trick here is
+to use the Docker container to describe a consistent environment that we will create
+our release in - which will be the same environment we eventually run our code in.
+
+I used this [Dockerfile]() that I got from Google to create a docker image that
+creates our distillery release and then uses that compiled code to expose an
+http port and run the app.
+
+```
+# Create an image using the Dockerfile
+$ docker build --no-cache -t hello .
+
+# Run the docker image we just created like this
+$ docker run -it --rm -p 8080:8080 hello
+
+# See that it works in a browser
+$ open http://localhost:8080
+
+# Stop the running container (lookup the container id, then kill it)
+$ docker ps
+$ docker kill <container-id>
+```
+
+### Running the container in Minikube
+
+Running a container one at a time is pretty cool, but our goal here is to run many
+containers with our app. This is where Kubernetes comes in. Using Minikube we can
+play around with a local Kubernetes cluster. In addition, to just running mulitple
+containerized instances of our app we would also like to let our app instances to
+be able to "talk" to each other and share resources. This example repo is configured
+to allow us to do this using a few tricks that I'll describe in detail later on. But
+for now, let's see what it looks like to run it.
+
+```
+# Start up Minikube (takes a minute or two)
+$ minikube start
+
+# See that we're up and running the cluster
+$ minikube status
+
+# Let Minikube talk to our local Docker daemon
+$ eval $(minikube docker-env)
+
+# Build another image for our app (like we did before)
+$ docker build --no-cache -t hello .
+
+# Tag the image with a name we can use in our Kubernetes config
+$ docker tag hello:latest liamgriffiths/hello:17
+
+# Edit ./k8s/hello/deployment and change the "image" entry to be the new tag we just used
+# (in this example it is "liamgriffiths/hello:17)
+
+# Apply our kubernetes config to the cluster (more on this later)
+$ ./apply-hello
+
+# Checkout this awesome built-in dashboard to inspect it (see namespace "hello")
+$ minikube dashboard
+
+# Open the our kubernetes "service" in a web browser
+$ minikube service service --namespace=hello
+
+# Trash our Minikube cluster (if you don't want it anymore)
+$ minikube delete
+```
+
+## How this all works
+
+### Phoenix websockets, channels, Elixir processes
+
+... tbd ...
+
+### Distributed Elixir/Erlang
+
+... tbd ...
+
+### Kubernetes configuration
+
+... tbd ...
 
 
+## Thanks
 
+... tbd ...
 
-
-
-
+Some blogs and tutorials that helped me out
 * https://cloud.google.com/community/tutorials/elixir-phoenix-on-kubernetes-google-container-engine
-
-
-## Make a new image and run with Docker
-
-```
-# build a new image
-docker build --no-cache -t hello .
-
-# run the image with docker
-docker run -it --rm -p 8080:8080 hello
-
-# open http://localhost:8080
-```
-
-## Run the container in Minikube
-```
-# start up minikube
-minikube start
-
-# let minikube and docker talk to each other
-eval $(minikube docker-env)
-
-# build the image (again?)
-
-# test run from minikube (no deployment, just seeing if we can access the container via mini)
-docker run -it --rm -p 8080:8080 hello
-
-# see that it is running
-open http://$(minikube ip):8080
-
-# not sure a good way to kill this now, since <C-c> doesn't seem to work...
-(open another termninal)
-eval $(minikube docker-env)
-docker kill <pid>
-```
-
-## Run k8s cluster in Minikube
-
-Setup a local image registry with Docker (See: https://github.com/googlefonts/fontbakery-dashboard/issues/3)
-```
-# 1. start minikube that knows about the local registry
-minikube start --insecure-registry localhost:5000
-
-# 2. hook into docker
-eval $(minikube docker-env)
-
-# 3. create local registry
-docker run -d -p 5000:5000 --restart=always --name registry   -v /data/docker-registry:/var/lib/registry registry:2
-```
-
-Publish image to local registry
-```
-# tag our image
-(local) docker tag hello:latest localhost:5000/hello/1
-(public) docker tag hello:latest liamgriffiths/hello:12
-
-# publish our image
-docker push localhost:5000/hello/1
-docker push liamgriffiths/hello:12
-```
-
-Run k8s cluster
-```
-# create config files in ./k8s/
-# (pod config) hello-deployment.yaml
-# (load balancer service) hello-service.yaml
-
-# create the deployment and service in minikube
-minikube create -f k8s/hello-deployment.yaml
-minikube create -f k8s/hello-service.yaml
-
-# (later) when updating the configs, apply the changes
-minikube apply -f k8s/hello-deployment.yaml
-minikube apply -f k8s/hello-service.yaml
-
-# open the service
-minikube service hello-service
-
-# check out the minikube dashboard
-minikube dashboard
-
-# peep the service using kubectl
-kubectl get service
-```
-
-Making changes and pushing them (steps)
-```
-# edit some code
-
-# re-build image
-docker build --no-cache -t hello .
-
-# re-tag our image
-docker tag hello:latest localhost:5000/hello/<next-version>
-
-# re-publish our image
-docker push localhost:5000/hello/<next-version>
-
-# update k8s deployment
-# (edit image field to use next image)
-
-# apply new deployment
-kubectl apply -f k8s/hello-deployment.yaml
-```
-
-Distributed Elixir
-```
-# each elixir node needs a name, this is setup using rel/vm.args create this
-# file and pass in a name that include the app + it's IP address in the k8s
-# (grep for vm.args)
-
-# nodes need a way to lookup other nodes - this is accomplished with another
-# k8s service - a "headless" service with no IP of it's own for the app
-# (see hello-headless-service.yaml)
-kubectl apply -f k8s/hello-headless-service.yaml
-
-# install `peerage` package and set it up in the config/prod.ex file
-# (see example)
-
-```
-
-
-
-To start your Phoenix server:
-
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
