@@ -23,11 +23,10 @@ $ brew install elixir
 $ brew install node
 
 # Install Docker
-$ brew install docker
-# (or just download the installer from the website)
+# (download the installer from the website and run it)
 
 # Install VirtualBox
-# (download the installer from the website)
+# (download the installer from the website and run it)
 
 # Install Minikube (mini kubernetes that runs on VirtualBox)
 $ brew cask install minikube
@@ -64,9 +63,6 @@ compiled app code as well as the Erlang runtime required to run it.  Distillery
 automates this process and gives us a simple command line tool to do it.
 
 ```
-# Make sure all the dependencies are downloaded and compile it all
-$ mix do deps.get, deps.compile, compile
-
 # Build all the frontend assets, then create a manifest file for them
 $ (cd assets && npm i && npm run deploy)
 $ mix phx.digest
@@ -140,7 +136,7 @@ $ docker build --no-cache -t hello .
 $ docker tag hello:latest liamgriffiths/hello:17
 
 # Edit ./k8s/hello/deployment and change the "image" entry to be the new tag we just used
-# (in this example it is "liamgriffiths/hello:17)
+# (in this example it is "liamgriffiths/hello:17")
 
 # Apply our kubernetes config to the cluster (more on this later)
 $ ./apply-hello
