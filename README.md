@@ -139,7 +139,7 @@ $ docker tag hello:latest liamgriffiths/hello:17
 # (in this example it is "liamgriffiths/hello:17")
 
 # Apply our kubernetes config to the cluster (more on this later)
-$ ./apply-hello
+$ kubectl apply -f ./k8s/hello.yaml
 
 # Checkout this awesome built-in dashboard to inspect it (see namespace "hello")
 $ minikube dashboard

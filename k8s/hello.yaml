@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hello
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: app
+  namespace: hello
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+        - name: hello
+          image: liamgriffiths/hello:18
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: hello
+spec:
+  ports:
+    - port: 6000
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: hello
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: headless-service
+  namespace: hello
+spec:
+  ports:
+    - port: 7777
+  selector:
+    app: hello
+  clusterIP: None
