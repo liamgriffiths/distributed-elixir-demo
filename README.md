@@ -64,11 +64,18 @@ compiled app code as well as the Erlang runtime required to run it.  Distillery
 automates this process and gives us a simple command line tool to do it.
 
 ```
-# Create a release with distiller
-$ mix release
+# Make sure all the dependencies are downloaded and compile it all
+$ mix do deps.get, deps.compile, compile
+
+# Build all the frontend assets, then create a manifest file for them
+$ (cd assets && npm i && npm run deploy)
+$ mix phx.digest
+
+# Create a release with distillery
+$ MIX_ENV=prod REPLACE_OS_VARS=true TERM=xterm mix release --env=prod --verbose
 
 # Run the release it produced
-$ _build/dev/rel/hello/bin/hello foreground
+$ MIX_ENV=prod PORT=4000 REPLACE_OS_VARS=true _build/prod/rel/hello/bin/hello foreground
 
 # See that it works in the browser
 $ open http://localhost:4000
@@ -103,6 +110,7 @@ $ open http://localhost:8080
 $ docker ps
 $ docker kill <container-id>
 ```
+
 
 ### Running the container in Minikube
 
