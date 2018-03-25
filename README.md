@@ -145,7 +145,7 @@ $ kubectl apply -f ./k8s/hello.yaml
 $ minikube dashboard
 
 # Open the our kubernetes "service" in a web browser
-$ minikube service service --namespace=hello
+$ minikube service web --namespace=hello
 
 # Trash our Minikube cluster (if you don't want it anymore)
 $ minikube delete
