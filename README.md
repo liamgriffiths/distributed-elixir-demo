@@ -1,4 +1,4 @@
-# Distributed Elixir Demo
+# Distributed Elixir Demo 🔮
 
 Hi, I made this little demo to show an example of how to setup a distributed Elixir
 app that you can run on a local Kubernetes cluster.
@@ -187,7 +187,7 @@ $ minikube delete
 * About the "service" config
 * About the "headless-service" config
 
-## Thanks
+## Thanks ❤️
 
 Big thanks to all the free projects out there that let me put this together:
 Elixir, Phoenix, React, Docker, Kubernetes, Distillery, Peerage, and all people
