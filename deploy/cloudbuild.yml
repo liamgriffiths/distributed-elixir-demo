@@ -1,8 +1,24 @@
 steps:
-  # Build the pipeline container image.
   - name: 'gcr.io/cloud-builders/docker'
+    args: ["build", "-t", "gcr.io/distributed-elixir-demo/hello:$REVISION_ID", "."]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ["push", "gcr.io/distributed-elixir-demo/hello:$REVISION_ID"]
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ["apply", "-f" "./k8s/hello.yaml"]
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
+
+  - name: 'gcr.io/cloud-builders/kubectl'
     args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/${PROJECT_ID}/hello:${COMMIT_SHA}'
-      - '.'
+      - set
+      - image
+      - deployment
+      - app
+      - hello=gcr.io/distributed-elixir-demo/hello:$REVISION_ID
+      - --namespace=hello
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
