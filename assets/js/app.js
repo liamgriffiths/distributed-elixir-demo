@@ -4,6 +4,8 @@ import React from "react"
 import ReactDOM from "react-dom"
 import {Socket} from "phoenix"
 
+alert('hello')
+
 const COLORS = [
 'c4e899',
 '95d7a4',
