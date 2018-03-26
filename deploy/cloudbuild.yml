@@ -5,7 +5,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ["push", "gcr.io/distributed-elixir-demo/hello:$REVISION_ID"]
 
-  - name: 'gcr.io/cloud-builders/kubectl'
+  - name: 'alpine'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -13,7 +13,7 @@ steps:
         (echo "cat <<EOF" ; cat ./deploy/k8s_template.yml ; echo EOF) | IMAGE=gcr.io/distributed-elixir-demo/hello:$REVISION_ID sh > k8s.yml
 
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ["kubectl", "apply", "-f", "k8s.yml"]
+    args: ["apply", "-f", "k8s.yml"]
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
