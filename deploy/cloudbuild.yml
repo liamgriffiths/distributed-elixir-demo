@@ -5,7 +5,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ["push", "gcr.io/distributed-elixir-demo/hello:$REVISION_ID"]
 
-  - name: 'make the new k8s version'
+  - name: 'gcr.io/cloud-builders/kubectl'
     entrypoint: 'sh'
     args:
       - '-c'
