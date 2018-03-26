@@ -6,19 +6,11 @@ steps:
     args: ["push", "gcr.io/distributed-elixir-demo/hello:$REVISION_ID"]
 
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ["apply", "-f", "./k8s/hello.yaml"]
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
-
-  - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'sh'
     args:
-      - set
-      - image
-      - deployment
-      - app
-      - hello=gcr.io/distributed-elixir-demo/hello:$REVISION_ID
-      - --namespace=hello
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
+      - '-c'
+      - |
+        (echo "cat <<EOF" ; cat ./deploy/k8s_template.yml ; echo EOF) | IMAGE=gcr.io/distributed-elixir-demo/hello:$REVISION_ID sh | kubectl apply -f -
